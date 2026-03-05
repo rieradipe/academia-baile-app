@@ -158,11 +158,15 @@ const ListaAlumnas = ({ onEdit, reloadKey = 0 }) => {
         <div className={styles.cumpleContainer}>
           <h2>🎂 Cumpleañeras del mes</h2>
           <ul>
-            {cumpleanios.map((a) => (
-              <li key={a.id}>
-                {a.nombre} {a.apellidos}
-              </li>
-            ))}
+            {cumpleanios.map((a) => {
+              const fecha = new Date(a.fecha_nacimiento);
+
+              return (
+                <li key={a.id}>
+                  <strong>{fecha.getDate()}</strong> — {a.nombre} {a.apellidos}
+                </li>
+              );
+            })}
           </ul>
         </div>
       )}
