@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import styles from "./ListaClases.module.css";
 
 const API = "http://localhost:3000";
 
@@ -59,62 +60,95 @@ const FormularioClase = ({ initialData, onSubmit, onCancel }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>{initialData ? "Editar clase" : "Nueva clase"}</h2>
+    <form onSubmit={handleSubmit} className={styles.formCard}>
+      <h2 className={styles.formTitle}>
+        {initialData ? "Editar clase" : "Nueva clase"}
+      </h2>
 
-      <input
-        name="nombre"
-        value={clase.nombre}
-        onChange={handleChange}
-        placeholder="Nombre"
-      />
+      <div className={styles.formGrid}>
+        <label className={styles.formField}>
+          <span>Nombre</span>
+          <input
+            name="nombre"
+            value={clase.nombre}
+            onChange={handleChange}
+            placeholder="Ej. Flamenco"
+          />
+        </label>
 
-      <input
-        name="descripcion"
-        value={clase.descripcion}
-        onChange={handleChange}
-        placeholder="Descripción"
-      />
+        <label className={styles.formField}>
+          <span>Descripción</span>
+          <input
+            name="descripcion"
+            value={clase.descripcion}
+            onChange={handleChange}
+            placeholder="Ej. Clase de flamenco"
+          />
+        </label>
 
-      <input
-        name="precio"
-        value={clase.precio}
-        onChange={handleChange}
-        placeholder="Precio"
-      />
+        <label className={styles.formField}>
+          <span>Precio</span>
+          <input
+            name="precio"
+            value={clase.precio}
+            onChange={handleChange}
+            placeholder="Ej. 30"
+          />
+        </label>
 
-      <input
-        name="cupo"
-        value={clase.cupo}
-        onChange={handleChange}
-        placeholder="Cupo"
-      />
+        <label className={styles.formField}>
+          <span>Cupo</span>
+          <input
+            name="cupo"
+            value={clase.cupo}
+            onChange={handleChange}
+            placeholder="Ej. 15"
+          />
+        </label>
 
-      <input
-        name="dias"
-        value={clase.dias}
-        onChange={handleChange}
-        placeholder="Días"
-      />
+        <label className={styles.formField}>
+          <span>Días</span>
+          <input
+            name="dias"
+            value={clase.dias}
+            onChange={handleChange}
+            placeholder="Ej. Lunes y miércoles"
+          />
+        </label>
 
-      <input
-        type="time"
-        name="hora_inicio"
-        value={clase.hora_inicio}
-        onChange={handleChange}
-      />
+        <label className={styles.formField}>
+          <span>Hora inicio</span>
+          <input
+            type="time"
+            name="hora_inicio"
+            value={clase.hora_inicio}
+            onChange={handleChange}
+          />
+        </label>
 
-      <input
-        type="time"
-        name="hora_fin"
-        value={clase.hora_fin}
-        onChange={handleChange}
-      />
+        <label className={styles.formField}>
+          <span>Hora fin</span>
+          <input
+            type="time"
+            name="hora_fin"
+            value={clase.hora_fin}
+            onChange={handleChange}
+          />
+        </label>
+      </div>
 
-      <button type="submit">Guardar</button>
-      <button type="button" onClick={onCancel}>
-        Cancelar
-      </button>
+      <div className={styles.formActions}>
+        <button type="submit" className={styles.primaryButton}>
+          Guardar
+        </button>
+        <button
+          type="button"
+          className={styles.secondaryButton}
+          onClick={onCancel}
+        >
+          Cancelar
+        </button>
+      </div>
     </form>
   );
 };

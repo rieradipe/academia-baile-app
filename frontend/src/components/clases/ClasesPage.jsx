@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ListaClases from "./ListaClases.jsx";
+import styles from "./ListaClases.module.css";
 import FormularioClase from "./FormularioClase.jsx";
 
 const API = "http://localhost:3000";
