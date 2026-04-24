@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Formulario from "./components/formulario/Formulario.jsx";
 import ListaAlumnas from "./components/listaAlumnas/ListaAlumnas.jsx";
-
+import ClasesPage from "./components/clases/ClasesPage.jsx";
 export default function App() {
   const [vista, setVista] = useState("home");
   const [alumnaEdit, setAlumnaEdit] = useState(null);
@@ -30,11 +30,6 @@ export default function App() {
     <div className="page">
       {vista === "home" && (
         <section className="home">
-          <h1 className="pageTitle">GA by RieraDiPe</h1>
-          <p className="pageSubtitle">
-            Gestión de academias fácil y profesional
-          </p>
-
           <div className="actionsRow">
             <button className="btnPrimary" onClick={handleNuevaAlumna}>
               Nueva alumna
@@ -42,7 +37,11 @@ export default function App() {
             <button className="btnSecondary " onClick={handleGestionar}>
               Gestionar alumnas
             </button>
+            <button className="btnSecondary" onClick={() => setVista("clases")}>
+              Gestionar clases
+            </button>
           </div>
+          <p className="homeSignature">by RieraDiPe</p>
         </section>
       )}
 
@@ -63,7 +62,23 @@ export default function App() {
               setReloadKey((k) => k + 1);
               setVista("gestionar");
             }}
+            onCancel={() => {
+              setAlumnaEdit(null);
+              setVista("gestionar");
+            }}
           />
+        </section>
+      )}
+      {vista === "clases" && (
+        <section className="contentWrap">
+          <div className="topBar">
+            <h2 className="sectionTitle">Gestión de clases</h2>
+            <button className="btnSecondary" onClick={volverAlInicio}>
+              Volver al inicio
+            </button>
+          </div>
+
+          <ClasesPage />
         </section>
       )}
 

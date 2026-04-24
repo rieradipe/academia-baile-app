@@ -4,7 +4,7 @@ import styles from "./Formulario.module.css";
 
 const API = "http://localhost:3000";
 
-const Formulario = ({ initialData = null, onSubmit }) => {
+const Formulario = ({ initialData = null, onSubmit, onCancel }) => {
   const [alumna, setAlumna] = useState({
     id: null,
     nombre: "",
@@ -22,7 +22,6 @@ const Formulario = ({ initialData = null, onSubmit }) => {
   const [errores, setErrores] = useState({});
   const [mensaje, setMensaje] = useState("");
 
-  // Cargar horarios
   useEffect(() => {
     fetch(`${API}/api/horarios`)
       .then((res) => res.json())
@@ -45,7 +44,6 @@ const Formulario = ({ initialData = null, onSubmit }) => {
     setHorariosSeleccionados([]);
   };
 
-  // Rellenar si editas
   useEffect(() => {
     if (initialData) {
       setAlumna({
@@ -71,10 +69,8 @@ const Formulario = ({ initialData = null, onSubmit }) => {
 
     setErrores({});
     setMensaje("");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialData]);
 
-  // Agrupar horarios por clase + ordenar para que salga bonito
   const horariosPorClase = useMemo(() => {
     const map = new Map();
 
@@ -137,7 +133,6 @@ const Formulario = ({ initialData = null, onSubmit }) => {
         : `${API}/api/alumnas`;
       const method = isEdit ? "PUT" : "POST";
 
-      // 1) Guardar alumna
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
@@ -145,10 +140,10 @@ const Formulario = ({ initialData = null, onSubmit }) => {
       });
 
       if (!res.ok) throw new Error("Error guardando la alumna");
+
       const saved = await res.json();
       const alumnaId = saved.id || alumna.id;
 
-      // 2) Reemplazar inscripciones
       const res2 = await fetch(`${API}/api/inscripciones/replace`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -157,10 +152,15 @@ const Formulario = ({ initialData = null, onSubmit }) => {
           horario_ids: horariosSeleccionados,
         }),
       });
+
       if (!res2.ok) throw new Error("Error guardando inscripciones");
 
       setMensaje(`✅ Alumna ${isEdit ? "modificada" : "creada"} correctamente`);
-      resetForm();
+
+      if (!isEdit) {
+        resetForm();
+      }
+
       onSubmit?.(saved);
 
       setTimeout(() => setMensaje(""), 2500);
@@ -173,11 +173,19 @@ const Formulario = ({ initialData = null, onSubmit }) => {
 
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
-      <h2 className={styles.title}>
-        {alumna.id ? "Editar alumna" : "Alta de alumna"}
-      </h2>
+      <div className={styles.header}>
+        <div>
+          <h2 className={styles.title}>
+            {alumna.id ? "Editar alumna" : "Alta de alumna"}
+          </h2>
+          <p className={styles.subtitle}>
+            {alumna.id
+              ? "Actualiza los datos personales y las inscripciones."
+              : "Completa los datos personales y selecciona sus clases."}
+          </p>
+        </div>
+      </div>
 
-      {/* GRID inputs */}
       <div className={styles.grid}>
         <Input
           label="Nombre*"
@@ -228,23 +236,20 @@ const Formulario = ({ initialData = null, onSubmit }) => {
           onChange={handleChange}
         />
 
-        {/* ✅ Observaciones dentro del grid y ancho completo */}
         <div className={styles.fieldWide}>
           <label>Observaciones</label>
           <textarea
             name="observaciones"
             value={alumna.observaciones}
             onChange={handleChange}
-            rows={3}
+            rows={4}
             placeholder="Notas: nivel previo, incidencias, pendiente de matrícula, etc."
           />
         </div>
       </div>
 
-      {/* Horarios */}
       <div className={styles.section}>
         <h3>Inscripción en clases</h3>
-
         <p className={styles.hint}>Selecciona uno o varios horarios.</p>
 
         {horariosPorClase.length === 0 ? (
@@ -253,10 +258,10 @@ const Formulario = ({ initialData = null, onSubmit }) => {
           <div className={styles.horariosGroup}>
             {horariosPorClase.map(([claseNombre, items]) => (
               <div key={claseNombre} className={styles.horarioBlock}>
-                {/* ✅ aquí está el “no apelotonado” */}
                 <h4 className={styles.horarioTitle}>
                   {claseNombre} ({items.length} horarios)
                 </h4>
+
                 <div className={styles.horarioList}>
                   {items.map((h) => {
                     const hid = Number(h.id);
@@ -285,6 +290,16 @@ const Formulario = ({ initialData = null, onSubmit }) => {
         <button type="submit" className={styles.btnPrimary}>
           {alumna.id ? "Guardar cambios" : "Crear alumna"}
         </button>
+
+        {onCancel && (
+          <button
+            type="button"
+            className={styles.btnSecondary}
+            onClick={onCancel}
+          >
+            Cancelar
+          </button>
+        )}
 
         {mensaje && <div className={styles.toast}>{mensaje}</div>}
       </div>

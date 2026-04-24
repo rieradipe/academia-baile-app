@@ -1,20 +1,19 @@
 :root {
-  --color-primary: #6ba292; /* verde */
-  --color-primary-dark: #4f8a78;
+  --color-primary: #8b5e3c; /* marrón dakota */
+  --color-primary-dark: #6f492d;
 
-  --color-bg: #f9fafb;
+  --color-bg: #eef5f1; /* verde muy claro */
   --color-surface: #ffffff;
 
-  --color-accent: #c4a484; /* marrón */
-  --color-accent-light: #d6b89c;
+  --color-accent: #9bbcaf; /* verde suave */
+  --color-accent-light: #cfe0d8;
 
-  --color-text: #1f2933;
+  --color-text: #24303a;
   --color-muted: #6b7280;
-
-  --color-border: #e5e7eb;
+  --color-border: #d8e2dc;
 
   --brand: var(--color-primary);
-  --brand-soft: rgba(107, 162, 146, 0.15);
+  --brand-soft: rgba(139, 94, 60, 0.1);
   --border-soft: var(--color-border);
   --text-soft: var(--color-muted);
 }
@@ -87,40 +86,59 @@ h2 {
   background: var(--color-bg);
   padding: 32px;
   box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 👇 AQUÍ ESTÁ LA MAGIA */
+.page::before {
+  content: "GA";
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: clamp(1200px, 30vw, 420px);
+  font-weight: 900;
+  line-height: 1;
+  color: rgba(139, 94, 60, 0.05);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.page > * {
+  position: relative;
+  z-index: 1;
 }
 
 .home {
-  max-width: 1100px;
-  margin: 0 auto;
+  min-height: calc(100vh - 64px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 .pageTitle {
   margin: 0;
-  font-size: 52px;
+  font-size: 56px;
   font-weight: 900;
-  color: var(--color-text);
+  color: var(--color-primary);
 }
 
 .pageSubtitle {
   margin: 12px 0 0;
-  font-size: 22px;
+  font-size: 20px;
   color: var(--color-text);
-}
-
-.actionsRow {
-  display: flex;
-  gap: 12px;
-  margin-top: 28px;
-  flex-wrap: wrap;
 }
 
 .btnPrimary,
 .btnSecondary {
   border: none;
-  padding: 12px 18px;
-  font-size: 15px;
+  padding: 16px 26px;
+  font-size: 22px;
   font-weight: 800;
-  border-radius: 14px;
+  border-radius: 20px;
   cursor: pointer;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
@@ -164,4 +182,21 @@ h2 {
   font-size: 30px;
   font-weight: 900;
   color: var(--color-text);
+}
+.brandName {
+  font-size: 20px;
+  font-weight: 600;
+  margin-left: 10px;
+  color: var(--color-muted);
+}
+.homeSignature {
+  margin-top: 4px;
+  font-size: 48px;
+  color: var(--color-primary);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+
+  font-family: "Brush Script MT", "Segoe Script", "Lucida Handwriting", cursive;
+
+  opacity: 0.95;
 }
