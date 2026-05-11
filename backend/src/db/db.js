@@ -42,13 +42,13 @@ db.serialize(() => {
     });
   };
 
-  addColumnIfMissing("Alumnas", "apellidos", "TEXT");
-  addColumnIfMissing("Alumnas", "dni", "TEXT");
-  addColumnIfMissing("Alumnas", "numero_ss", "TEXT");
-  addColumnIfMissing("Alumnas", "fecha_nacimiento", "TEXT");
-  addColumnIfMissing("Alumnas", "fecha_inscripcion", "TEXT");
-  addColumnIfMissing("Alumnas", "observaciones", "TEXT");
-  addColumnIfMissing("Alumnas", "pagado", "INTEGER DEFAULT 0");
+  addColumnIfMissing("alumnas", "apellidos", "TEXT");
+  addColumnIfMissing("alumnas", "dni", "TEXT");
+  addColumnIfMissing("alumnas", "numero_ss", "TEXT");
+  addColumnIfMissing("alumnas", "fecha_nacimiento", "TEXT");
+  addColumnIfMissing("alumnas", "fecha_inscripcion", "TEXT");
+  addColumnIfMissing("alumnas", "observaciones", "TEXT");
+  addColumnIfMissing("alumnas", "pagado", "INTEGER DEFAULT 0");
 
   db.run(`
     CREATE TABLE IF NOT EXISTS Pagos (
