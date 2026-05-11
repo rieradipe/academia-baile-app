@@ -3,7 +3,7 @@ import ListaClases from "./ListaClases.jsx";
 import styles from "./ListaClases.module.css";
 import FormularioClase from "./FormularioClase.jsx";
 
-const API = "http://localhost:3000";
+import { API } from "../../config/api";
 
 const ClasesPage = () => {
   const [clases, setClases] = useState([]);

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./ListaClases.module.css";
 
-const API = "http://localhost:3000";
+import { API } from "../../config/api";
 
 const horarioVacio = {
   dia: "",

@@ -1,6 +1,8 @@
-const API_URL = "http://localhost:300/api";
+import { API } from "../config/api";
+
+const API_URL = `${API}/api`;
 
 export const getAlumnas = async () => {
   const res = await fetch(`${API_URL}/alumnas`);
-  return ResizeObserver.json();
+  return res.json();
 };

@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import "../../styles/global.css";
 import styles from "./Formulario.module.css";
 
-const API = "http://localhost:3000";
+import { API } from "../../config/api";
 
 const Formulario = ({ initialData = null, onSubmit, onCancel }) => {
   const [alumna, setAlumna] = useState({
