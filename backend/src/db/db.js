@@ -1,10 +1,14 @@
 const sqlite3 = require("sqlite3").verbose();
 const path = require("path");
+const fs = require("fs");
 
-// Ruta correcta de la BD dentro de data/
-const DB_PATH = path.resolve("data", "academia.db");
+const DATA_DIR = path.join(__dirname, "../../data");
+const DB_PATH = path.join(DATA_DIR, "academia.db");
 
-// Abrir o crear la base de datos
+if (!fs.existsSync(DATA_DIR)) {
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+}
+
 const db = new sqlite3.Database(DB_PATH, (err) => {
   if (err) {
     console.error("Error al abrir la base de datos:", err.message);
@@ -13,9 +17,7 @@ const db = new sqlite3.Database(DB_PATH, (err) => {
   }
 });
 
-// Crear tablas mínimas si no existen
 db.serialize(() => {
-  // 👈 Tabla Alumnas
   db.run(`
     CREATE TABLE IF NOT EXISTS Alumnas (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -26,7 +28,6 @@ db.serialize(() => {
     )
   `);
 
-  // 👈 Tabla Pagos
   db.run(`
     CREATE TABLE IF NOT EXISTS Pagos (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -39,7 +40,6 @@ db.serialize(() => {
     )
   `);
 
-  // 👈 Tabla Clases
   db.run(`
     CREATE TABLE IF NOT EXISTS Clases (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -54,18 +54,17 @@ db.serialize(() => {
     )
   `);
 
-  // tabla relacional entre alumnas y clases. Inscripciones
   db.run(`
-  CREATE TABLE IF NOT EXISTS Inscripciones (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    alumna_id INTEGER NOT NULL,
-    clase_id INTEGER NOT NULL,
-    fecha_inscripcion TEXT,
-    FOREIGN KEY(alumna_id) REFERENCES Alumnas(id),
-    FOREIGN KEY(clase_id) REFERENCES Clases(id)
-
- )
+    CREATE TABLE IF NOT EXISTS Inscripciones (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      alumna_id INTEGER NOT NULL,
+      clase_id INTEGER NOT NULL,
+      fecha_inscripcion TEXT,
+      FOREIGN KEY(alumna_id) REFERENCES Alumnas(id),
+      FOREIGN KEY(clase_id) REFERENCES Clases(id)
+    )
   `);
+
   console.log("📁 DB PATH:", DB_PATH);
 });
 
