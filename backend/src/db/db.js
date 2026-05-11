@@ -22,11 +22,33 @@ db.serialize(() => {
     CREATE TABLE IF NOT EXISTS Alumnas (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       nombre TEXT NOT NULL,
+      apellidos TEXT,
+      dni TEXT,
+      numero_ss TEXT,
       telefono TEXT,
       email TEXT,
-      activa INTEGER DEFAULT 1
+      fecha_nacimiento TEXT,
+      fecha_inscripcion TEXT,
+      observaciones TEXT,
+      activa INTEGER DEFAULT 1,
+      pagado INTEGER DEFAULT 0
     )
   `);
+  const addColumnIfMissing = (table, column, definition) => {
+    db.run(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`, (err) => {
+      if (err && !err.message.includes("duplicate column name")) {
+        console.error(`Error añadiendo columna ${column}:`, err.message);
+      }
+    });
+  };
+
+  addColumnIfMissing("Alumnas", "apellidos", "TEXT");
+  addColumnIfMissing("Alumnas", "dni", "TEXT");
+  addColumnIfMissing("Alumnas", "numero_ss", "TEXT");
+  addColumnIfMissing("Alumnas", "fecha_nacimiento", "TEXT");
+  addColumnIfMissing("Alumnas", "fecha_inscripcion", "TEXT");
+  addColumnIfMissing("Alumnas", "observaciones", "TEXT");
+  addColumnIfMissing("Alumnas", "pagado", "INTEGER DEFAULT 0");
 
   db.run(`
     CREATE TABLE IF NOT EXISTS Pagos (
