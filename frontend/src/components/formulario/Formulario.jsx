@@ -25,7 +25,15 @@ const Formulario = ({ initialData = null, onSubmit, onCancel }) => {
   useEffect(() => {
     fetch(`${API}/api/horarios`)
       .then((res) => res.json())
-      .then((data) => setHorarios(Array.isArray(data) ? data : []))
+      .then((data) => {
+        console.log("HORARIOS:", data);
+
+        const horariosValidos = Array.isArray(data)
+          ? data.filter((h) => h.clase_nombre && h.clase_nombre !== "Sin clase")
+          : [];
+
+        setHorarios(horariosValidos);
+      })
       .catch((err) => console.error("Error cargando horarios:", err));
   }, []);
 
@@ -58,11 +66,28 @@ const Formulario = ({ initialData = null, onSubmit, onCancel }) => {
         observaciones: initialData.observaciones ?? "",
       });
 
-      setHorariosSeleccionados(
-        Array.isArray(initialData.horarios)
-          ? initialData.horarios.map((h) => Number(h.horario_id ?? h.id))
-          : []
-      );
+      const cargarInscripciones = async () => {
+        try {
+          const res = await fetch(
+            `${API}/api/inscripciones/alumna/${initialData.id}`
+          );
+
+          if (!res.ok) throw new Error("Error cargando inscripciones");
+
+          const data = await res.json();
+
+          const ids = Array.isArray(data)
+            ? data.map((i) => Number(i.horario_id))
+            : [];
+
+          setHorariosSeleccionados(ids);
+        } catch (err) {
+          console.error("Error cargando horarios de la alumna:", err);
+          setHorariosSeleccionados([]);
+        }
+      };
+
+      cargarInscripciones();
     } else {
       resetForm();
     }
@@ -82,9 +107,21 @@ const Formulario = ({ initialData = null, onSubmit, onCancel }) => {
     }
 
     for (const [k, arr] of map.entries()) {
+      const ordenDias = {
+        Lunes: 1,
+        Martes: 2,
+        Miércoles: 3,
+        Miercoles: 3,
+        Jueves: 4,
+        Viernes: 5,
+        Sábado: 6,
+        Sabado: 6,
+        Domingo: 7,
+      };
+
       arr.sort(
         (a, b) =>
-          (a.dia || "").localeCompare(b.dia || "") ||
+          (ordenDias[a.dia] || 99) - (ordenDias[b.dia] || 99) ||
           (a.hora_inicio || "").localeCompare(b.hora_inicio || "")
       );
       map.set(k, arr);

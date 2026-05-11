@@ -4,9 +4,18 @@ const controller = require("../controllers/inscripciones.controller");
 const router = express.Router();
 
 router.get("/", controller.getAll);
+
+router.get("/test", (req, res) => {
+  res.json({ ok: true, mensaje: "inscripciones funciona" });
+});
+
+router.get("/alumna/:id", controller.getByAlumnaId);
+
 router.get("/:id", controller.getById);
+
 router.post("/", controller.create);
 router.post("/replace", controller.replaceByAlumna);
+
 router.delete("/:id", controller.remove);
 
 module.exports = router;

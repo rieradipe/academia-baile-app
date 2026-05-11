@@ -66,6 +66,7 @@ db.serialize(() => {
 
  )
   `);
+  console.log("📁 DB PATH:", DB_PATH);
 });
 
 module.exports = db;

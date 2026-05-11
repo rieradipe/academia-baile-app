@@ -10,6 +10,7 @@ const getAll = () => repo.findAll();
  * Obtener inscripción por ID
  */
 const getById = (id) => repo.findById(id);
+const getByAlumnaId = (alumna_id) => repo.findByAlumnaId(alumna_id);
 
 /**
  * Crear inscripción
@@ -77,6 +78,7 @@ const deleteInscripcion = (id) => repo.remove(id);
 module.exports = {
   getAll,
   getById,
+  getByAlumnaId,
   createInscripcion,
   replaceByAlumna,
   deleteInscripcion,

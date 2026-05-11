@@ -3,16 +3,22 @@ import styles from "./ListaClases.module.css";
 
 const API = "http://localhost:3000";
 
+const horarioVacio = {
+  dia: "",
+  hora_inicio: "",
+  hora_fin: "",
+  descripcion: "",
+};
+
 const FormularioClase = ({ initialData, onSubmit, onCancel }) => {
   const [clase, setClase] = useState({
     nombre: "",
     descripcion: "",
     precio: "",
     cupo: "",
-    dias: "",
-    hora_inicio: "",
-    hora_fin: "",
   });
+
+  const [horarios, setHorarios] = useState([]);
 
   useEffect(() => {
     if (initialData) {
@@ -21,16 +27,37 @@ const FormularioClase = ({ initialData, onSubmit, onCancel }) => {
         descripcion: initialData.descripcion || "",
         precio: initialData.precio || "",
         cupo: initialData.cupo || "",
-        dias: initialData.dias || "",
-        hora_inicio: initialData.hora_inicio || "",
-        hora_fin: initialData.hora_fin || "",
       });
+    } else {
+      setClase({
+        nombre: "",
+        descripcion: "",
+        precio: "",
+        cupo: "",
+      });
+      setHorarios([]);
     }
   }, [initialData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setClase((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const agregarHorario = () => {
+    setHorarios((prev) => [...prev, horarioVacio]);
+  };
+
+  const cambiarHorario = (index, campo, valor) => {
+    setHorarios((prev) =>
+      prev.map((horario, i) =>
+        i === index ? { ...horario, [campo]: valor } : horario
+      )
+    );
+  };
+
+  const eliminarHorario = (index) => {
+    setHorarios((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async (e) => {
@@ -50,8 +77,31 @@ const FormularioClase = ({ initialData, onSubmit, onCancel }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(clase),
       });
-
       if (!res.ok) throw new Error("Error guardando clase");
+
+      const saved = await res.json();
+      const claseId = saved.id || saved.lastID || initialData?.id;
+
+      for (const horario of horarios) {
+        if (!horario.dia || !horario.hora_inicio || !horario.hora_fin) continue;
+
+        const resHorario = await fetch(`${API}/api/horarios`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            clase_id: claseId,
+            dia: horario.dia,
+            hora_inicio: horario.hora_inicio,
+            hora_fin: horario.hora_fin,
+            descripcion: horario.descripcion || "Horario disponible",
+            activa: 1,
+          }),
+        });
+
+        if (!resHorario.ok) {
+          throw new Error("Error guardando horarios");
+        }
+      }
 
       onSubmit?.();
     } catch (error) {
@@ -105,42 +155,80 @@ const FormularioClase = ({ initialData, onSubmit, onCancel }) => {
             placeholder="Ej. 15"
           />
         </label>
-
-        <label className={styles.formField}>
-          <span>Días</span>
-          <input
-            name="dias"
-            value={clase.dias}
-            onChange={handleChange}
-            placeholder="Ej. Lunes y miércoles"
-          />
-        </label>
-
-        <label className={styles.formField}>
-          <span>Hora inicio</span>
-          <input
-            type="time"
-            name="hora_inicio"
-            value={clase.hora_inicio}
-            onChange={handleChange}
-          />
-        </label>
-
-        <label className={styles.formField}>
-          <span>Hora fin</span>
-          <input
-            type="time"
-            name="hora_fin"
-            value={clase.hora_fin}
-            onChange={handleChange}
-          />
-        </label>
       </div>
+
+      <section className={styles.horariosSection}>
+        <div className={styles.horariosHeader}>
+          <h3>Horarios de la clase</h3>
+          <button
+            type="button"
+            className={styles.secondaryButton}
+            onClick={agregarHorario}
+          >
+            + Añadir horario
+          </button>
+        </div>
+
+        {horarios.length === 0 && (
+          <p className={styles.emptyText}>Todavía no has añadido horarios.</p>
+        )}
+
+        {horarios.map((horario, index) => (
+          <div key={index} className={styles.horarioRow}>
+            <select
+              value={horario.dia}
+              onChange={(e) => cambiarHorario(index, "dia", e.target.value)}
+            >
+              <option value="">Día</option>
+              <option value="Lunes">Lunes</option>
+              <option value="Martes">Martes</option>
+              <option value="Miércoles">Miércoles</option>
+              <option value="Jueves">Jueves</option>
+              <option value="Viernes">Viernes</option>
+              <option value="Sábado">Sábado</option>
+              <option value="Domingo">Domingo</option>
+            </select>
+
+            <input
+              type="time"
+              value={horario.hora_inicio}
+              onChange={(e) =>
+                cambiarHorario(index, "hora_inicio", e.target.value)
+              }
+            />
+
+            <input
+              type="time"
+              value={horario.hora_fin}
+              onChange={(e) =>
+                cambiarHorario(index, "hora_fin", e.target.value)
+              }
+            />
+
+            <input
+              value={horario.descripcion}
+              onChange={(e) =>
+                cambiarHorario(index, "descripcion", e.target.value)
+              }
+              placeholder="Descripción opcional"
+            />
+
+            <button
+              type="button"
+              className={styles.dangerButton}
+              onClick={() => eliminarHorario(index)}
+            >
+              Eliminar
+            </button>
+          </div>
+        ))}
+      </section>
 
       <div className={styles.formActions}>
         <button type="submit" className={styles.primaryButton}>
           Guardar
         </button>
+
         <button
           type="button"
           className={styles.secondaryButton}

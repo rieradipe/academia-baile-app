@@ -127,6 +127,22 @@ const existsByAlumnaHorario = (alumna_id, horario_id) => {
     });
   });
 };
+// Obtener inscripciones por alumna_id
+const findByAlumnaId = (alumna_id) => {
+  return new Promise((resolve, reject) => {
+    const sql = `
+      SELECT id, alumna_id, horario_id, fecha_inscripcion
+      FROM Inscripciones
+      WHERE alumna_id = ?
+      ORDER BY fecha_inscripcion DESC
+    `;
+
+    db.all(sql, [alumna_id], (err, rows) => {
+      if (err) return reject(err);
+      resolve(rows);
+    });
+  });
+};
 
 // Eliminar inscripción
 const remove = (id) => {
@@ -144,5 +160,6 @@ module.exports = {
   create,
   replaceByAlumna,
   existsByAlumnaHorario,
+  findByAlumnaId,
   remove,
 };

@@ -3,7 +3,11 @@ const service = require("../services/clases.service");
 // GET /api/clases
 const getAll = async (req, res) => {
   try {
-    const clases = await service.getAll();
+    const estado = req.query.estado || "activas";
+
+    console.log("🟡 ESTADO RECIBIDO:", estado);
+
+    const clases = await service.getAll(estado);
     res.json(clases);
   } catch (err) {
     res.status(500).json({ error: err.message });

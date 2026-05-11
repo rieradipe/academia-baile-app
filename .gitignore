@@ -19,3 +19,8 @@ backend/node_modules/
 # Editor
 .vscode/
 .idea/
+# SQLite / backups
+backend/data/*.db
+backend/data/*.sqlite
+backend/src/tasks/backups/*.sqlite
+backend/src/tasks/backups/*.db

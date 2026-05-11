@@ -101,11 +101,11 @@ const ListaClases = ({
                 {detalle.descripcion || "Sin descripción"}
               </p>
               <p>
-                <strong>Días:</strong> {detalle.dias || "Sin días"}
+                <strong>Precio:</strong>{" "}
+                {detalle.precio ? `${detalle.precio} €` : "Sin precio"}
               </p>
               <p>
-                <strong>Horario:</strong> {detalle.hora_inicio || "--:--"} -{" "}
-                {detalle.hora_fin || "--:--"}
+                <strong>Cupo:</strong> {detalle.cupo || "Sin cupo definido"}
               </p>
             </div>
 

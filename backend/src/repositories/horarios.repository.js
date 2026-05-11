@@ -7,9 +7,12 @@ const findAll = () => {
       SELECT h.id, h.clase_id, h.dia, h.hora_inicio, h.hora_fin, h.descripcion, h.activa,
              c.nombre AS clase_nombre
       FROM Horarios h
-      LEFT JOIN Clases c ON h.clase_id = c.id
+      INNER JOIN Clases c ON h.clase_id = c.id
+      WHERE h.activa = 1
+        AND c.activa = 1
       ORDER BY h.dia, h.hora_inicio
     `;
+
     db.all(sql, [], (err, rows) => {
       if (err) reject(err);
       else resolve(rows);

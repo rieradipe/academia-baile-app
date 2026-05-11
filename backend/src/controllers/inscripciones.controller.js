@@ -19,6 +19,14 @@ const getById = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+const getByAlumnaId = async (req, res) => {
+  try {
+    const inscripciones = await service.getByAlumnaId(req.params.id);
+    res.json(inscripciones);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
 const create = async (req, res) => {
   try {
@@ -61,4 +69,11 @@ const replaceByAlumna = async (req, res) => {
   }
 };
 
-module.exports = { getAll, getById, create, replaceByAlumna, remove };
+module.exports = {
+  getAll,
+  getById,
+  getByAlumnaId,
+  create,
+  replaceByAlumna,
+  remove,
+};
