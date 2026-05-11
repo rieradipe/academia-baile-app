@@ -54,14 +54,29 @@ db.serialize(() => {
     )
   `);
 
+  // 👇 NUEVA TABLA HORARIOS
+  db.run(`
+    CREATE TABLE IF NOT EXISTS Horarios (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      clase_id INTEGER NOT NULL,
+      dia TEXT NOT NULL,
+      hora_inicio TEXT NOT NULL,
+      hora_fin TEXT NOT NULL,
+      descripcion TEXT,
+      activa INTEGER DEFAULT 1,
+      FOREIGN KEY(clase_id) REFERENCES Clases(id)
+    )
+  `);
+
+  // 👇 INSCRIPCIONES ACTUALIZADA
   db.run(`
     CREATE TABLE IF NOT EXISTS Inscripciones (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       alumna_id INTEGER NOT NULL,
-      clase_id INTEGER NOT NULL,
+      horario_id INTEGER NOT NULL,
       fecha_inscripcion TEXT,
       FOREIGN KEY(alumna_id) REFERENCES Alumnas(id),
-      FOREIGN KEY(clase_id) REFERENCES Clases(id)
+      FOREIGN KEY(horario_id) REFERENCES Horarios(id)
     )
   `);
 
