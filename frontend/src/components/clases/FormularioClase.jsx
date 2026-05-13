@@ -159,7 +159,7 @@ const FormularioClase = ({ initialData, onSubmit, onCancel }) => {
 
       <section className={styles.horariosSection}>
         <div className={styles.horariosHeader}>
-          <h3>Horarios de la clase</h3>
+          <h3>Horarios</h3>
           <button
             type="button"
             className={styles.secondaryButton}

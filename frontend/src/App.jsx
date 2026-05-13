@@ -32,13 +32,13 @@ export default function App() {
         <section className="home">
           <div className="actionsRow">
             <button className="btnPrimary" onClick={handleNuevaAlumna}>
-              Nueva alumna
+              Nuev@
             </button>
             <button className="btnSecondary " onClick={handleGestionar}>
-              Gestionar alumnas
+              Gestion
             </button>
             <button className="btnSecondary" onClick={() => setVista("clases")}>
-              Gestionar clases
+              Espacios
             </button>
           </div>
           <p className="homeSignature">by RieraDiPe</p>
